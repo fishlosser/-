@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>html5实现贪吃蛇小游戏</title>
+<title>魔改贪吃蛇</title>
 <style>
 #myCanvas {
     box-shadow: 0 0 6px #000;
@@ -11,21 +11,22 @@
 </head>
 <body>
 <br/><br/><br/>
-<input type="button" value="开始游戏" onclick="beginGame();"><br/><br/><br/>
+<input type="button" value="begin" onclick="beginGame();"><br/><br/><br/>
 <canvas id="myCanvas" width="450" height="450"></canvas>
 
 <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+
 var w = 15; //格子宽、高
-var snaLen = 6; //初始长度
+var snaLen = 10; //初始长度
 var snake = []; //身体长度
 for (var i = 0; i < snaLen; i++) {
     snake[i] = new cell(i, 0, 39);
 }
 var head = snake[snaLen - 1]; //头部
 //初始食物
-var foodx = Math.ceil(Math.random() * 28 + 1);
+var foodx = Math.ceil(Math.random() * 28 + 1);//1-29 random-0.0-1.0)
 var foody = Math.ceil(Math.random() * 28 + 1);
 var food = new Food(foodx, foody);
 //食物
@@ -46,23 +47,11 @@ function cell(x, y, d) {
 //动作
 function draw() {
     ctx.clearRect(0, 0, 450, 450);
-    //画布局
-    //      for(var i = 0; i < 30; i++){
-    //          ctx.strokeStyle = "#ccc";//线条颜色
-    //          ctx.beginPath();
-    //          ctx.moveTo(0,i*w);
-    //          ctx.lineTo(450,i*w);
-
-    //          ctx.moveTo(i*w,0);
-    //          ctx.lineTo(i*w,450);
-    //          ctx.closePath();
-    //          ctx.stroke();
-    //      }
     //画蛇身
     for (var j = 0; j < snake.length; j++) {
-        ctx.fillStyle = "green";
+        ctx.fillStyle ="black";
         if (j == snake.length - 1) {
-            ctx.fillStyle = "red";
+            ctx.fillStyle = "orange";
         }
         ctx.beginPath();
         ctx.rect(snake[j].x * w, snake[j].y * w, w, w);
@@ -110,19 +99,31 @@ function initFood() {
         }
     }
 }
+//调色器,添加部分
+function color(){
+	var col=(Math.ceil(Math.random() * 6 ));
+	switch(col){''
+		case 4:return "red";break;
+		case 2:return "green";break;
+		case 5:return "orange";break;
+		case 3:return "black";break;
+	}
+
+
+}
 //画食物
 function drawFood() {
     //绘制食物
-    ctx.fillStyle = "orange";
+    ctx.fillStyle = color();
     ctx.beginPath();
-    ctx.rect(food.x * w, food.y * w, w, w);
+    ctx.rect(food.x * w, food.y * w, w, w);//创建矩形,w格子宽和高
     ctx.closePath();
-    ctx.fill();
+    ctx.fill();//使用fillStyle定义的颜色进行填充
 }
 draw();
 //监听键盘事件
 document.onkeydown = function(e) {
-    //下40 ， 右边39，左边37，上38  键盘事件
+    //下40 ， 右边39，左边37，上38  键盘事件，返回按键Unicode值
     var keyCode = e.keyCode;
     if (head.d - keyCode != 2 && head.d - keyCode != -2 && keyCode >= 37 && keyCode <= 40) {
         moveSnake(keyCode);
@@ -130,7 +131,7 @@ document.onkeydown = function(e) {
 }
 //控制蛇移动方向
 function moveSnake(keyCode) {
-    var newSnake = [];
+    var newSnake = [];//重新画图
     var newCell = new cell(head.x, head.y, head.d); //头
     //身体
     for (var i = 1; i < snake.length; i++) {
@@ -168,7 +169,7 @@ function checkDeath() {
     for (var i = 0; i < snake.length - 1; i++) {
         if (head.x == snake[i].x && head.y == snake[i].y) {
             alert("Game over!");
-            window.location.reload();
+            window.location.reload();//重新载入当前文档
         }
     }
 }
